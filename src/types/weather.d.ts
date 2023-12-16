@@ -1,15 +1,18 @@
 export interface WeatherFetchProps {
-  latitude: number;
-  longitude: number;
-  units?: WeatherUnits;
+  location: Location | null;
+  userLocationInput: userLocationInputDebounce;
+}
+
+export interface WetherProps {
+  units: WeatherUnits;
   hourly?: HourlyWeatherProps[];
   current?: CurrentWeatherProps[];
 }
 
 export interface WeatherUnits {
-  temperature_unit?: "celsius" | "fahrenheit";
-  wind_speed_unit?: "kmh" | "mph" | "ms" | "kn";
-  precipitation_unit?: "mm" | "inch";
+  temperature_unit: "celsius" | "fahrenheit";
+  wind_speed_unit: "kmh" | "mph" | "ms" | "kn";
+  precipitation_unit: "mm" | "inch";
 }
 
 export type CurrentWeatherProps =
@@ -32,6 +35,7 @@ export type CurrentWeatherProps =
 export type WeatherAPIInterface = "forecast";
 
 export interface WeatherFetchResponse {
+  timestamp: Date;
   latitude: number;
   longitude: number;
   generationtime_ms: number;
@@ -50,19 +54,54 @@ export interface WeatherFetchResponse {
     [key: string]: string;
   };
   current: {
-    time: string;
-    interval: number;
-    [key: string]: string | number;
-  };
+    temperature_2m?: number;
+    weather_code?: WeatherCode;
+  } & { time: string; interval: number };
   current_units: {
     time: string;
     interval: string;
-    temperature_2m: string;
+    temperature_2m: number;
     rain: string;
     wind_speed_10m: string;
     [key: string]: string | number;
   };
 }
+
+export interface Location {
+  name?: string;
+  latitude: number | string;
+  longitude: number | string;
+}
+
+type WeatherCode =
+  | 0
+  | 1
+  | 2
+  | 3
+  | 45
+  | 48
+  | 51
+  | 53
+  | 55
+  | 56
+  | 57
+  | 61
+  | 63
+  | 65
+  | 66
+  | 67
+  | 71
+  | 73
+  | 75
+  | 77
+  | 80
+  | 81
+  | 82
+  | 85
+  | 86
+  | 95
+  | 96
+  | 99;
 
 export type HourlyWeatherProps =
   | "temperature_2m"
